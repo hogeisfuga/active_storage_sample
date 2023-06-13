@@ -1,0 +1,15 @@
+current directory: /Users/Aki/src/DMM/active_storage_sample/vendor/bundle/ruby/3.1.0/gems/bindex-0.8.1/ext/skiptrace
+/Users/Aki/.rbenv/versions/3.1.2/bin/ruby -I /Users/Aki/.rbenv/versions/3.1.2/lib/ruby/3.1.0 -r ./siteconf20230606-70181-5zq930.rb extconf.rb
+creating Makefile
+
+current directory: /Users/Aki/src/DMM/active_storage_sample/vendor/bundle/ruby/3.1.0/gems/bindex-0.8.1/ext/skiptrace
+make DESTDIR\= clean
+
+current directory: /Users/Aki/src/DMM/active_storage_sample/vendor/bundle/ruby/3.1.0/gems/bindex-0.8.1/ext/skiptrace
+make DESTDIR\=
+compiling cruby.c
+linking shared-object skiptrace/internal/cruby.bundle
+
+current directory: /Users/Aki/src/DMM/active_storage_sample/vendor/bundle/ruby/3.1.0/gems/bindex-0.8.1/ext/skiptrace
+make DESTDIR\= install
+/usr/bin/install -c -m 0755 cruby.bundle ./.gem.20230606-70181-2bxtb5/skiptrace/internal

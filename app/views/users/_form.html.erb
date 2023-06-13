@@ -1,0 +1,53 @@
+<%= form_with(model: user) do |form| %>
+  <% if user.errors.any? %>
+    <div id="error_explanation">
+      <h2><%= pluralize(user.errors.count, "error") %> prohibited this user from being saved:</h2>
+
+      <ul>
+        <% user.errors.each do |error| %>
+          <li><%= error.full_message %></li>
+        <% end %>
+      </ul>
+    </div>
+  <% end %>
+
+  <div class="field">
+    <%= form.label :name %>
+    <%= form.text_field :name %>
+  </div>
+
+  <div class="field">
+    <%= form.label :avator %>
+    <%= form.file_field :avator, accept: 'image/*' %>
+    <div id="avator_field" style="height: 70px; margin-top: 20px;">
+    <% if user.avator.attached? %>
+      <%= image_tag user.avator.variant(resize_to_limit: [100, 100]).processed %>
+    <% end %>
+    </div>
+  </div>
+
+  <div class="actions">
+    <%= form.submit %>
+  </div>
+<% end %>
+
+<script>
+  document.addEventListener("turbolinks:load", () => {
+    const avatorInput = document.getElementById("user_avator")
+    avatorInput.addEventListener("change", (e) => {
+      if (e.srcElement.files.length > 0) {
+        const field = document.getElementById("avator_field")
+        while (field.firstChild) {
+          field.removeChild(field.firstChild);
+        }
+    
+        for (const file of e.srcElement.files) {
+          const imgTag = document.createElement("img");
+          imgTag.src = URL.createObjectURL(file)
+          imgTag.style.height = "80px"
+          field.appendChild(imgTag)
+        };
+      }
+    })
+  })
+</script>
