@@ -1,4 +1,3 @@
-<h1>edit formだよ</h1>
 <%= form_with(model: message) do |form| %>
   <% if message.errors.any? %>
     <div id="error_explanation">
@@ -26,10 +25,12 @@
     <%= form.label :images %>
     <%= form.file_field :images, multiple: true %>
     <div id="message_files">
+    </div>
+    <div id="attached_files">
       <% if message.images.attached? %>
         <% message.images.each do |image|%>
-          <%= image_tag image.variant(resize: "100x100").processed %>
-          <%= form.hidden_field :image_id,  value: image.id %>
+          <%= image_tag image.variant(resize: "100x100").processed, id: "image-#{image.id}" %>
+          <button type="button" data-image-id=<%= image.id %>>削除する</button>
         <% end %>
       <% end %>
     </div>
@@ -42,6 +43,36 @@
 
 <script>
   document.addEventListener("turbolinks:load", () => {
+    // ファイル選択ボタンのchangeイベント設定
+    setChangeEventToImageInput()
+    setOnclick()
+  })
+
+  const setOnclick = () => {
+    const buttons = document.querySelectorAll("button[data-image-id]");
+    buttons.forEach(button => {
+      button.addEventListener("click", (e)=> {
+        e.preventDefault()
+        if(e.target.dataset.imageId) {
+          const imageId = e.target.dataset.imageId
+          const hiddenInput = document.createElement("input")
+          hiddenInput.name = "message_delete_image_ids[]"
+          hiddenInput.type = "hidden"
+          hiddenInput.value = imageId
+
+          document.getElementById("attached_files").appendChild(hiddenInput)
+
+          imgTag = document.getElementById(`image-${imageId}`)
+          e.target.remove()
+          imgTag.remove()
+        }
+
+        const hiddenInput = document.getElementById("message_delete_image_ids[]")
+        const value = hiddenInput.value ? hiddenInput.value : nul
+      })
+    })
+  }
+  const setChangeEventToImageInput = () => {
     const imageElm = document.getElementById("message_images")
     imageElm.addEventListener("change", (e) => {
       const field = document.getElementById("message_files")
@@ -57,5 +88,6 @@
         };
       }
     })
-  })
+
+  }
 </script>

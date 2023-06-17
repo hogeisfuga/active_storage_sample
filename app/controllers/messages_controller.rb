@@ -36,15 +36,24 @@ class MessagesController < ApplicationController
 
   # PATCH/PUT /messages/1 or /messages/1.json
   def update
-    respond_to do |format|
-      if @message.update(message_params)
+      update_params = message_params.slice(:content, :user_id, :images)
+      Message.transaction do
+        @message.update!(update_params)
+        if message_delete_params.length > 0
+          message_delete_params.each do |id| 
+            @message.images.find(id).purge
+          end
+        end
+      end
+      respond_to do |format|
         format.html { redirect_to message_url(@message), notice: "Message was successfully updated." }
         format.json { render :show, status: :ok, location: @message }
-      else
+      end
+    rescue StandardError => e
+      respond_to do |format|
         format.html { render :edit, status: :unprocessable_entity }
         format.json { render json: @message.errors, status: :unprocessable_entity }
       end
-    end
   end
 
   # DELETE /messages/1 or /messages/1.json
@@ -66,5 +75,9 @@ class MessagesController < ApplicationController
     # Only allow a list of trusted parameters through.
     def message_params
       params.require(:message).permit(:content, :user_id, images: [])
+    end
+
+    def message_delete_params
+      params[:message_delete_image_ids] || []
     end
 end
